@@ -24,6 +24,7 @@ network:
     internal: eth0
     external: eth1
   hosts:
+    vip: controller-vip.example.com
     controllers: controller1.example.com, controller2.example.com, controller3.example.com
     compute: compute1.example.com, compute2.example.com
     mongodb:  controller1,controller2,controller3

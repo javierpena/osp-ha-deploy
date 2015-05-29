@@ -12,8 +12,8 @@ nodeMap["compute"]="compute1 compute2"
 nodeMap["serverprep"]="controller1 controller2 controller3"
 
 variables["nodes"]=""
-variables["components"]="hypervisors serverprep lb galera rabbitmq memcached redis mongodb keepalived"
-#variables["components"]="keepalived"
+#variables["components"]="hypervisors serverprep lb galera rabbitmq memcached redis mongodb keepalived keystone"
+variables["components"]="keystone"
 variables["network_domain"]="example.com"
 variables["config"]="ha-collapsed"
 

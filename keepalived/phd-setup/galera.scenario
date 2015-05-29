@@ -56,7 +56,7 @@ systemctl start mysqld
 mysql -e "CREATE USER 'clustercheck'@'localhost' IDENTIFIED BY 'redhat';"
 systemctl stop mysqld
 
-myip=$(ip a |grep ${PHD_VAR_network_nic_internal} | grep inet | awk '{print $2}' | awk -F/ '{print $1}')
+myip=$(ip a |grep ${PHD_VAR_network_nic_internal} | grep inet | awk '{print $2}' | awk -F/ '{print $1}' | head -n 1)
 
 cat > /etc/my.cnf.d/galera.cnf << EOF
 [mysqld]

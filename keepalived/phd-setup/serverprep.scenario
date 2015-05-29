@@ -32,6 +32,9 @@ PHD_VAR_network_ips_controllers
 PHD_VAR_network_ips_computeinternal
 PHD_VAR_network_hosts_controllers
 PHD_VAR_network_hosts_compute
+PHD_VAR_network_ips_vip
+PHD_VAR_network_hosts_vip
+
 #################################
 # Scenario Requirements Section #
 #################################
@@ -66,6 +69,9 @@ do
 
     addhosts=$(printf "${addhosts}\n${compute_ips[item]} ${compute_names[item]} ${shortname}")
 done
+
+shortname=$(echo ${cPHD_VAR_network_hosts_vip} | awk -F. '{print $1}')
+addhosts=$(printf "${addhosts}\n${PHD_VAR_network_ips_vip} ${PHD_VAR_network_hosts_vip} ${shortname}")
 
 echo "$addhosts" >> /etc/hosts
 ....
