@@ -34,6 +34,11 @@ network:
     memcache: controller1:11211,controller2:11211,controller3:11211
     rabbitmq: controller1,controller2,controller3
   domain: example.com
+  neutron:
+    externalgateway: 10.10.10.1
+    externalnetwork: 10.10.10.0/24
+    allocpoolstart: 10.10.10.100
+    allocpoolend: 10.10.10.150
   ssh:
     pubkey: ssh-dss AAAAB3NzaC1kc3MAAACBANTRU30h4EC1sv5kb/KJBDYx0D/YKWAVzMJpeWLzFrECF41Tymte8W5s4oz0CzpQQH4r19YFpeS+jingeakkRc749ImwhJE77yRmPsjaEDe3OZXW+Udz4dikE5HBjuVlEL9UN3yoGfBZCXo9Jm+oRJCH+wx36Pl69IHRZwJIAvQfAAAAFQDTdIeHmLP77PvjG5jo6eEYDTedXwAAAIEAvwKlws7V3qy6Ckd26FcAr1noN+myBdVVpb960F7BPWIxXkA9z12o+3y5JEUJRVTplRf8pBz1JwKdsYS7WJj8teSslmwbQz0kQ61uSNkWqBZGOLE/ddQxCJbD3OTXRZ289A/2mRBcil8mIg82JY1AzNr1OaQQ82ZP35nISA/jeQMAAACBAIeuHCLqkYRf7Xuv2ztFOhPzLrJRRSm7Zcpdxp5Ano7R68Yq1RQbMn0lUIG4QMssviQPyklF/xHYGJLUXBIUfNORn7BYqHikbcguUHKiwiC9io9xR9+zlvgIAIU6bbnsNT9MofTdrRT+H7df6cDP8NO43w8dWFXWX4K3NUU0YjbM
 
