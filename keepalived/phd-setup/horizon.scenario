@@ -28,11 +28,9 @@
 #################################
 = VARIABLES =
 
+PHD_VAR_network_nic_internal
 PHD_VAR_network_ips_controllers
-PHD_VAR_network_ips_computeinternal
-PHD_VAR_network_hosts_controllers
-PHD_VAR_network_hosts_compute
-PHD_VAR_network_ips_vip
+PHD_VAR_network_hosts_memcache
 PHD_VAR_network_hosts_vip
 
 #################################
@@ -48,30 +46,38 @@ nodes: 1
 
 target=all
 ....
-
-IFS=', ' read -a controller_names <<< "${PHD_VAR_network_hosts_controllers}"
-IFS=', ' read -a controller_ips <<< "${PHD_VAR_network_ips_controllers}"
-IFS=', ' read -a compute_names <<< "${PHD_VAR_network_hosts_compute}"
-IFS=', ' read -a compute_ips <<< "${PHD_VAR_network_ips_computeinternal}"
-
-addhosts=""
-
-for item in "${controller_names[@]}"
-do
-    shortname=$(echo ${controller_names[item]} | awk -F. '{print $1}')
-
-    addhosts=$(printf "${addhosts}\n${controller_ips[item]} ${controller_names[item]} ${shortname}")
-done
-
-for item in "${controller_names[@]}"
-do
-    shortname=$(echo ${compute_names[item]} | awk -F. '{print $1}')
-
-    addhosts=$(printf "${addhosts}\n${compute_ips[item]} ${compute_names[item]} ${shortname}")
-done
-
-shortname=$(echo ${PHD_VAR_network_hosts_vip} | awk -F. '{print $1}')
-addhosts=$(printf "${addhosts}\n${PHD_VAR_network_ips_vip} ${PHD_VAR_network_hosts_vip} ${shortname}")
-
-echo "$addhosts" >> /etc/hosts
+yum install -y mod_wsgi httpd mod_ssl python-memcached openstack-dashboard
 ....
+
+target=$PHD_ENV_nodes1
+....
+IFS=', ' read -a controller_ips <<< "${PHD_VAR_network_ips_controllers}"
+
+openssl rand -hex 10 > /tmp/horizon_secret.key
+scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -p /tmp/horizon_secret.key ${controller_ips[1]}:/tmp
+scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -p /tmp/horizon_secret.key ${controller_ips[2]}:/tmp
+....
+
+target=all
+....
+IFS=', ' read -a memcached_hosts <<< "${PHD_VAR_network_hosts_memcache}"
+
+SECRET_KEY=$(cat /tmp/horizon_secret.key)
+rm -f /tmp/horizon_secret.key
+
+sed -i -e "s#SECRET_KEY.*#SECRET_KEY = \'${SECRET_KEY}\'#g#" /etc/openstack-dashboard/local_settings
+
+sed -i -e "s#ALLOWED_HOSTS.*#ALLOWED_HOSTS = ['*',]#g" \
+-e "s#^CACHES#SESSION_ENGINE = 'django.contrib.sessions.backends.cache'\nCACHES#g#" \
+-e "s#locmem.LocMemCache'#memcached.MemcachedCache',\n\t'LOCATION' : [ '${memcached_hosts[0]}', '${memcached_hosts[1]}', '${memcached_hosts[2]}', ]#g" \
+-e 's#OPENSTACK_HOST =.*#OPENSTACK_HOST = "${PHD_VAR_network_hosts_vip}"#g' \
+-e "s#^LOCAL_PATH.*#LOCAL_PATH = '/var/lib/openstack-dashboard'#g" \
+/etc/openstack-dashboard/local_settings
+
+systemctl daemon-reload
+systemctl restart httpd
+firewall-cmd --add-port=80/tcp
+firewall-cmd --add-port=80/tcp --permanent
+....
+
+
