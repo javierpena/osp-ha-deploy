@@ -18,10 +18,10 @@
 #   For example, to run on only the first node would be target=$PHD_ENV_nodes1
 #
 # Tasks to be performed at this step include:
-# - Tweaking the IP stack to allow nonlocal binding and adjusting keepalive timings
-# - Configuring haproxy
-# - Adding the virtual IPs to the cluster
-# - Putting haproxy under the cluster's control
+# - Installing Heat
+# - Creating the required Heat domain
+# - Configuring Heat
+# - Starting services and opening firewall rules
 
 #################################
 # Scenario Requirements Section #

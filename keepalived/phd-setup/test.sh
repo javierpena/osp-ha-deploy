@@ -9,11 +9,11 @@ declare -A cluster
 nodeMap["hypervisors"]="oslab1 oslab2 oslab3"
 nodeMap["controllers"]="controller1 controller2 controller3"
 nodeMap["compute"]="compute1 compute2"
-nodeMap["serverprep"]="controller1 controller2 controller3"
+nodeMap["serverprep"]="controller1 controller2 controller3 compute1 compute2"
 
 variables["nodes"]=""
-#variables["components"]="hypervisors serverprep lb galera rabbitmq memcached redis mongodb keepalived keystone glance cinder swift neutron nova ceilometer heat horizon"
-variables["components"]="horizon"
+variables["components"]="hypervisors serverprep lb galera rabbitmq memcached redis mongodb keepalived keystone glance cinder swift neutron nova ceilometer heat horizon sahara trove compute"
+#variables["components"]="compute"
 variables["network_domain"]="example.com"
 variables["config"]="ha-collapsed"
 
